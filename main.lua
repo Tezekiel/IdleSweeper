@@ -1,47 +1,17 @@
-function love.load(lostGame)
-  Object = require "libs/classic"
+GameState = require "libs/gameState"
 
-  if lostGame == true then
-    print("You lost")
-    love.graphics.clear(0,0,0,1)
-    love.graphics.print("You lost", 100, 100)
-    require "models/button"
-    button = Button(100, 200, "Play again")
-    return
-  end
+GameOver = require "screens/gameOver"
+Game = require "screens/game"
 
-  require "models/field"
-  require "helpers/generateBoard"
-
-  board = generateBoard(8, 8, 12)
+function love.load()
+  GameState.registerEvents()
+  GameState.switch(Game)
 end
 
-function love.update(dt)
+function love.update()
 
 end
 
 function love.draw()
-  if lostGame then
-    button:draw()
-    return
-  end
 
-  for i = 1, #board do
-    for j = 1, #board[i] do
-      board[i][j]:draw()
-    end
-  end
-end
-
-function love.mousereleased(x, y, mouseBtn)
-  if lostGame then
-    button:isClicked(x, y)
-    return
-  end
-
-  for i = 1, #board do
-    for j = 1, #board[i] do
-      board[i][j]:onClicked(x, y, mouseBtn, board)
-    end
-  end
 end

@@ -1,4 +1,5 @@
 function generateBoard(rows, columns, mineCount)
+  require "models/field"
   local board = {}
 
   -- initialize board as all non-mines

@@ -1,3 +1,4 @@
+local Object = require "../libs/classic"
 Field = Object:extend()
 
 local SPRITE_SIZE = 32
@@ -14,6 +15,8 @@ function Field:new(row, column)
   self.revealed = false
   self.flagged = false
   self.adjacentMines = 0
+
+  image = love.graphics.newImage("assets/minesweeper.png")
 end
 
 function Field:revealAdjacentFields(board)
@@ -45,7 +48,7 @@ function Field:reveal(board)
   self.revealed = true
   if self.isMine then
     self.image = love.graphics.newQuad(SPRITE_SIZE * 5, 0, SPRITE_SIZE, SPRITE_SIZE, IMAGE_WIDTH, IMAGE_HEIGHT)
-    love.load(true)
+    GameState.push(GameOver)
   else
     handleReveal(self, board)
     if self.adjacentMines == 0 then
@@ -62,8 +65,6 @@ end
 function Field:convertToMine()
   self.isMine = true
 end
-
-image = love.graphics.newImage("assets/minesweeper.png")
 
 function Field:draw()
   love.graphics.draw(image, self.image, self.x, self.y)
