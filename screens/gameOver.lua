@@ -1,12 +1,14 @@
 local gameOver = {}
 
-function gameOver:enter()
+function gameOver:enter(from)
   require "../models/button"
 
   button = Button(100, 200, "Play again")
+  self.from = from
 end
 
 function gameOver:draw()
+  self.from:draw()
   button:draw()
 end
 
