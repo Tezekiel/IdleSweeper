@@ -1,11 +1,11 @@
 GameState = require "libs/gameState"
 
-GameOver = require "screens/gameOver"
-Game = require "screens/game"
+gameOver = require "screens/gameOver"
+game = require "screens/game"
 
 function love.load()
   GameState.registerEvents()
-  GameState.switch(Game)
+  GameState.switch(game)
 end
 
 function love.update()

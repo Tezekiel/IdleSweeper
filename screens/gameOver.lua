@@ -1,9 +1,10 @@
 local gameOver = {}
 
-function gameOver:enter(from)
+function gameOver:enter(from, message)
   require "../models/button"
 
-  button = Button(100, 200, "Play again")
+  local msg = message or "Game over! "
+  button = Button(100, 200, msg .. "Play again")
   self.from = from
 end
 
@@ -15,7 +16,7 @@ end
 function gameOver:mousereleased(x, y)
   isClicked = button:isClicked(x, y)
   if isClicked then
-    GameState.switch(Game)
+    GameState.switch(game)
   end
 end
 

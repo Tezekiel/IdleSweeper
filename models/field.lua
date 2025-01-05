@@ -11,7 +11,7 @@ function Field:new(row, column)
   self.y = column * SPRITE_SIZE
   self.width = SPRITE_SIZE
   self.height = SPRITE_SIZE
-  self.isMine = false
+  self.mined = false
   self.revealed = false
   self.flagged = false
   self.adjacentMines = 0
@@ -27,7 +27,7 @@ function Field:revealAdjacentFields(board)
         local newCol = self.y / SPRITE_SIZE + dy
         if board[newRow] and board[newRow][newCol] then
           local adjacentField = board[newRow][newCol]
-          if not adjacentField.revealed and not adjacentField.isMine then
+          if not adjacentField.revealed and not adjacentField.mined then
             adjacentField:reveal(board)
           end
         end
@@ -37,6 +37,7 @@ function Field:revealAdjacentFields(board)
 end
 
 local function handleReveal(self)
+  self.flagged = false
   if self.adjacentMines == 0 then
     self.image = love.graphics.newQuad(SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE, IMAGE_WIDTH, IMAGE_HEIGHT)
   else
@@ -46,9 +47,9 @@ end
 
 function Field:reveal(board)
   self.revealed = true
-  if self.isMine then
+  if self.mined then
     self.image = love.graphics.newQuad(SPRITE_SIZE * 5, 0, SPRITE_SIZE, SPRITE_SIZE, IMAGE_WIDTH, IMAGE_HEIGHT)
-    GameState.push(GameOver)
+    GameState.push(gameOver)
   else
     handleReveal(self, board)
     if self.adjacentMines == 0 then
@@ -58,12 +59,16 @@ function Field:reveal(board)
 end
 
 function Field:flag()
-  self.flagged = true
-  self.image = love.graphics.newQuad(SPRITE_SIZE * 2, 0, SPRITE_SIZE, SPRITE_SIZE, IMAGE_WIDTH, IMAGE_HEIGHT)
+  self.flagged = not self.flagged
+  if self.flagged then
+    self.image = love.graphics.newQuad(SPRITE_SIZE * 2, 0, SPRITE_SIZE, SPRITE_SIZE, IMAGE_WIDTH, IMAGE_HEIGHT)
+  else
+    self.image = love.graphics.newQuad(0, 0, SPRITE_SIZE, SPRITE_SIZE, IMAGE_WIDTH, IMAGE_HEIGHT)
+  end
 end
 
 function Field:convertToMine()
-  self.isMine = true
+  self.mined = true
 end
 
 function Field:draw()
@@ -72,7 +77,7 @@ end
 
 function Field:onClicked(x, y, button, board)
   if x > self.x and x < self.x + self.width and y > self.y and y < self.y + self.height then
-    if (self.revealed or self.flagged) then
+    if self.revealed then
       return
     end
     if button == 1 then

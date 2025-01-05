@@ -27,7 +27,7 @@ function generateBoard(rows, columns, mineCount)
     repeat -- repeat until we find a non-mine field
       row = love.math.random(1, rows)
       column = love.math.random(1, columns)
-    until not board[row][column].isMine
+    until not board[row][column].mined
 
     board[row][column]:convertToMine()
 
@@ -35,7 +35,7 @@ function generateBoard(rows, columns, mineCount)
       local adjRow = row + dir[1]
       local adjColumn = column + dir[2]
       if adjRow >= 1 and adjRow <= rows and adjColumn >= 1 and adjColumn <= columns then
-        if not board[adjRow][adjColumn].isMine then
+        if not board[adjRow][adjColumn].mined then
           board[adjRow][adjColumn].adjacentMines = board[adjRow][adjColumn].adjacentMines + 1
         end
       end
